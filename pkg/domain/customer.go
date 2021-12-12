@@ -14,14 +14,25 @@ type Customer struct {
 	Status      string
 }
 
+// GetCustomers returns a list of all customers
+func GetCustomers() Customers {
+	return CustomerList
+}
+
+// GetCustomerById returns a customer by id
+func GetCustomerById(id string) (*Customer, int, error) {
+	for i, v := range CustomerList {
+		if v.Id == id {
+			return v, i, nil
+		}
+	}
+	return nil, -1, io.EOF
+}
+
 type Customers []*Customer
 
 func (c *Customers) Len() int {
 	return len(CustomerList)
-}
-
-func GetCustomers() Customers {
-	return CustomerList
 }
 
 // ToJSON populates the JSON payload from the product struct

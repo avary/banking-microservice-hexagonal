@@ -26,6 +26,7 @@ func main() {
 
 	getRtr := r.Methods(http.MethodGet).Subrouter()
 	getRtr.HandleFunc("/customers", ch.GetAllCustomers)
+	getRtr.HandleFunc("/customers/{id:[0-9]+}", ch.GetCustomerByID)
 
 	// creating the server
 	srv := &http.Server{
