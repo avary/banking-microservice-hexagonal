@@ -15,24 +15,12 @@ func NewCustomers(l *log.Logger) *Customers {
 	return &Customers{l}
 }
 
-// ServeHTTP : Products implicitly implements the http.Handler interface
-func (c *Customers) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	switch r.Method {
-	case http.MethodGet:
-		c.l.Println("Handle GET request")
-		c.getAllCustomers(w, r)
-	default:
-		w.WriteHeader(http.StatusNotFound)
-	}
-}
-
-// getAllCustomers returns all the products from datastore
-func (c *Customers) getAllCustomers(w http.ResponseWriter, _ *http.Request) {
+// GetAllCustomers returns all the products from datastore
+func (c *Customers) GetAllCustomers(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	c.l.Println("Handling GET request...")
 
-	// fetch all products from the datastore
+	// fetch all customers from the datasource
 	lc := domain.GetCustomers()
 
 	// serialize/encode the list of products to JSON

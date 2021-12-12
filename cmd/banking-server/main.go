@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/ashtishad/banking-microservice-hexagonal/pkg/service"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
@@ -15,26 +16,30 @@ const (
 )
 
 func main() {
-	l := log.New(os.Stdout, "banking-api", log.LstdFlags)
+	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
 
-	customerHandler := service.NewCustomers(l)
+	// Create customer service
+	ch := service.NewCustomers(l)
 
-	// creating new serve mux
-	mux := http.NewServeMux()
-	mux.Handle("/customers", customerHandler)
+	// create a router and register handlers
+	r := mux.NewRouter()
 
-	// creating new server
+	getRtr := r.Methods(http.MethodGet).Subrouter()
+	getRtr.HandleFunc("/customers", ch.GetAllCustomers)
+
+	// creating the server
 	srv := &http.Server{
 		Addr:         port,
-		Handler:      mux,
+		Handler:      r,
 		IdleTimeout:  100 * time.Second,
 		ReadTimeout:  2 * time.Second,
 		WriteTimeout: 2 * time.Second,
 	}
-	// go routine to start server
+
+	// go routine to start server on port 8080
 	go startServer(srv, l)
 
-	// wait for interrupt signal to gracefully shut down the server
+	// wait for interrupt signal to gracefully shut down the server with a timeout of 30 seconds.
 	gracefulShutdown(srv, l)
 }
 
@@ -46,7 +51,7 @@ func startServer(srv *http.Server, l *log.Logger) {
 	}
 }
 
-// wait for interrupt signal to gracefully shut down the server with a timeout of 30 seconds
+// wait for interrupt signal to gracefully shut down the server with a timeout of 30 seconds.
 func gracefulShutdown(srv *http.Server, l *log.Logger) {
 	// listen for interrupt signal
 	quit := make(chan os.Signal, 1)
