@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/ashtishad/banking-microservice-hexagonal/internal/handlers"
+	"github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
 	"github.com/ashtishad/banking-microservice-hexagonal/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
@@ -11,23 +13,18 @@ import (
 	"time"
 )
 
-const (
-	port = ":8080"
-)
+const port = ":8080"
 
 func main() {
 	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
 
-	// Create customer service
-	ch := service.NewCustomers(l)
+	// wire up the handlers
+	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(domain.NewCustomerRepositoryStub()), L: l}
 
 	// create a router and register handlers
 	r := mux.NewRouter()
-
 	getRtr := r.Methods(http.MethodGet).Subrouter()
 	getRtr.HandleFunc("/customers", ch.GetAllCustomers)
-	getRtr.HandleFunc("/customers/{id:[0-9]+}", ch.GetCustomerByID)
-
 	// creating the server
 	srv := &http.Server{
 		Addr:         port,
