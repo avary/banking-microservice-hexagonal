@@ -9,7 +9,7 @@ type Customer struct {
 	Status      string
 }
 
-// CustomerRepository is a Secondary PORT on Hexagonal architecture
+// CustomerRepository is a SECONDARY PORT on Hexagonal architecture
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
 }

@@ -1,17 +1,9 @@
 package domain
 
-import (
-	"encoding/json"
-	"io"
-)
-
-// CustomerRepositoryStub is a CustomerRepository implementation
+// CustomerRepositoryStub is a Stub ADAPTER
+// supplies the data, and the methods to manipulate it, for the CustomerRepository PORT.
 type CustomerRepositoryStub struct {
 	customers []Customer
-}
-
-func (s *CustomerRepositoryStub) ToJSON(w io.Writer) error {
-	return json.NewEncoder(w).Encode(s.customers)
 }
 
 func (s *CustomerRepositoryStub) FindAll() ([]Customer, error) {

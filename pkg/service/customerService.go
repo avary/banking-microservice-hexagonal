@@ -2,6 +2,7 @@ package service
 
 import "github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
 
+// CustomerService is our PRIMARY PORT
 type CustomerService interface {
 	GetAllCustomers() ([]domain.Customer, error)
 }

@@ -22,6 +22,7 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, _ *http.Reque
 		ch.L.Printf("Error while getting all customers : %v", err)
 		return
 	}
+
 	if err := json.NewEncoder(w).Encode(customers); err != nil {
 		http.Error(w, "Unable to encode json", http.StatusBadRequest)
 		ch.L.Printf("Error while encoding json : %v", err)
