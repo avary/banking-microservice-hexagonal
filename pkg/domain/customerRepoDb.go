@@ -34,6 +34,13 @@ func (d *CustomerRepoDb) FindAll() ([]Customer, error) {
 	if err != nil {
 		d.L.Printf("Error while querying on customer table : %s", err.Error())
 	}
+	// defer rows.Close() , error wrapped in a closure
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			d.L.Printf("Error while closing rows : %s", err.Error())
+		}
+	}(rows)
 
 	customers := make([]Customer, 0)
 	for rows.Next() {
@@ -45,4 +52,17 @@ func (d *CustomerRepoDb) FindAll() ([]Customer, error) {
 		customers = append(customers, c)
 	}
 	return customers, nil
+}
+
+// FindById returns a customer by id
+func (d *CustomerRepoDb) FindById(id int) (Customer, error) {
+	findByIdSql := "select * from customers where customer_id = ?"
+	row := d.db.QueryRow(findByIdSql, id)
+
+	var c Customer
+	if err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status); err != nil {
+		d.L.Printf("Error while scanning customers by id : %s", err.Error())
+		return c, err
+	}
+	return c, nil
 }

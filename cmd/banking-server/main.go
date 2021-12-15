@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-const port = ":8080"
+const port = ":5000"
 
 func main() {
 	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
@@ -26,6 +26,8 @@ func main() {
 	r := mux.NewRouter()
 	getRtr := r.Methods(http.MethodGet).Subrouter()
 	getRtr.HandleFunc("/customers", ch.GetAllCustomers)
+	getRtr.HandleFunc("/customers/{customer_id:[0-9]+}", ch.GetCustomerByID)
+
 	// creating the server
 	srv := &http.Server{
 		Addr:         port,
