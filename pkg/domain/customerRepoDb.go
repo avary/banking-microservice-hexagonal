@@ -55,14 +55,14 @@ func (d *CustomerRepoDb) FindAll() ([]Customer, error) {
 }
 
 // FindById returns a customer by id
-func (d *CustomerRepoDb) FindById(id int) (Customer, error) {
+func (d *CustomerRepoDb) FindById(id int) (*Customer, error) {
 	findByIdSql := "select * from customers where customer_id = ?"
 	row := d.db.QueryRow(findByIdSql, id)
 
 	var c Customer
 	if err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status); err != nil {
 		d.L.Printf("Error while scanning customers by id : %s", err.Error())
-		return c, err
+		return nil, err
 	}
-	return c, nil
+	return &c, nil
 }

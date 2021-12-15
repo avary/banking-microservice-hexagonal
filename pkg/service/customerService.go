@@ -5,7 +5,7 @@ import "github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
 // CustomerService is our PRIMARY PORT
 type CustomerService interface {
 	GetAllCustomers() ([]domain.Customer, error)
-	GetById(id int) (domain.Customer, error)
+	GetById(id int) (*domain.Customer, error)
 }
 
 type DefaultCustomerService struct {
@@ -26,10 +26,10 @@ func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, error) {
 }
 
 // GetById returns customer by id
-func (s DefaultCustomerService) GetById(id int) (domain.Customer, error) {
+func (s DefaultCustomerService) GetById(id int) (*domain.Customer, error) {
 	customer, err := s.repoDb.FindById(id)
 	if err != nil {
-		return domain.Customer{}, err
+		return nil, err
 	}
 	return customer, nil
 }
