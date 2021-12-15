@@ -8,16 +8,16 @@ type CustomerService interface {
 }
 
 type DefaultCustomerService struct {
-	repo domain.CustomerRepository
+	repoDb domain.CustomerRepoDb
 }
 
-func NewCustomerService(repo domain.CustomerRepository) DefaultCustomerService {
-	return DefaultCustomerService{repo: repo}
+func NewCustomerService(repo domain.CustomerRepoDb) DefaultCustomerService {
+	return DefaultCustomerService{repoDb: repo}
 }
 
 // GetAllCustomers returns all customers
 func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, error) {
-	customers, err := s.repo.FindAll()
+	customers, err := s.repoDb.FindAll()
 	if err != nil {
 		return nil, err
 	}
