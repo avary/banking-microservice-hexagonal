@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
+
 type Customer struct {
 	Id          int    `json:"id"`
 	Name        string `json:"name"`
@@ -12,5 +14,5 @@ type Customer struct {
 // CustomerRepository is a SECONDARY PORT on Hexagonal architecture
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
-	FindById(id string) (*Customer, error)
+	FindById(id string) (*Customer, *errs.AppError)
 }

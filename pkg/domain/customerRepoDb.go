@@ -2,6 +2,7 @@ package domain
 
 import (
 	"database/sql"
+	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"time"
@@ -55,14 +56,21 @@ func (d *CustomerRepoDb) FindAll() ([]Customer, error) {
 }
 
 // FindById returns a customer by id
-func (d *CustomerRepoDb) FindById(id int) (*Customer, error) {
+func (d *CustomerRepoDb) FindById(id int) (*Customer, *errs.AppError) {
 	findByIdSql := "select * from customers where customer_id = ?"
 	row := d.db.QueryRow(findByIdSql, id)
 
 	var c Customer
-	if err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status); err != nil {
+	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
+	if err == sql.ErrNoRows {
 		d.L.Printf("Error while scanning customers by id : %s", err.Error())
-		return nil, err
+		return nil, errs.NewNotFoundError("Customer not found in database")
 	}
+	// catch other errors that might occur
+	if err != nil {
+		d.L.Printf("Error while scanning customers by id : %s", err.Error())
+		return nil, errs.NewUnexpectedError("Unexpected database error")
+	}
+
 	return &c, nil
 }

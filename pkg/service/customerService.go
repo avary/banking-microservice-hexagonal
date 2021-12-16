@@ -1,11 +1,14 @@
 package service
 
-import "github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
+import (
+	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
+)
 
 // CustomerService is our PRIMARY PORT
 type CustomerService interface {
 	GetAllCustomers() ([]domain.Customer, error)
-	GetById(id int) (*domain.Customer, error)
+	GetById(id int) (*domain.Customer, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
@@ -26,7 +29,7 @@ func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, error) {
 }
 
 // GetById returns customer by id
-func (s DefaultCustomerService) GetById(id int) (*domain.Customer, error) {
+func (s DefaultCustomerService) GetById(id int) (*domain.Customer, *errs.AppError) {
 	customer, err := s.repoDb.FindById(id)
 	if err != nil {
 		return nil, err

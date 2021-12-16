@@ -26,7 +26,7 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, _ *http.Reque
 	}
 
 	if err := json.NewEncoder(w).Encode(customers); err != nil {
-		http.Error(w, "Unable to encode json", http.StatusBadRequest)
+		//http.Error(w, "Unable to encode json", http.StatusBadRequest)
 		ch.L.Printf("Error while encoding json : %v", err)
 		return
 	}
@@ -34,7 +34,6 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, _ *http.Reque
 
 // GetCustomerByID is a handler function to get customer by id
 func (ch *CustomerHandlers) GetCustomerByID(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
 	ch.L.Println("Handling GET request on ... /customers/{id}")
 
 	// getting customer id from url path
@@ -43,10 +42,18 @@ func (ch *CustomerHandlers) GetCustomerByID(w http.ResponseWriter, r *http.Reque
 	ch.L.Printf("id = %v", id)
 
 	customer, err := ch.Service.GetById(id)
-	if err != nil {
-		http.Error(w, "Unable to retrieve customer", http.StatusBadRequest)
+	if err.StatusCode == http.StatusNotFound {
+		http.Error(w, err.Message, err.StatusCode)
 		return
 	}
+
+	// catch other errors might occur, Internal Server Error
+	if err != nil {
+		http.Error(w, err.Message, err.StatusCode)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(customer); err != nil {
 		http.Error(w, "Unable to get customer by id.", http.StatusBadRequest)
