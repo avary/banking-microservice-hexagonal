@@ -7,7 +7,7 @@ import (
 
 // CustomerService is our PRIMARY PORT
 type CustomerService interface {
-	GetAllCustomers() ([]domain.Customer, *errs.AppError)
+	GetAllCustomers(status string) ([]domain.Customer, *errs.AppError)
 	GetById(id int) (*domain.Customer, *errs.AppError)
 }
 
@@ -20,8 +20,8 @@ func NewCustomerService(repo domain.CustomerRepoDb) DefaultCustomerService {
 }
 
 // GetAllCustomers returns all customers
-func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, *errs.AppError) {
-	customers, err := s.repoDb.FindAll()
+func (s DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {
+	customers, err := s.repoDb.FindAll(status)
 	if err != nil {
 		return nil, err
 	}

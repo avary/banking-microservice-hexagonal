@@ -29,27 +29,29 @@ func NewCustomerRepoDb(L *log.Logger) CustomerRepoDb {
 }
 
 // FindAll returns all customers from the database
-func (d *CustomerRepoDb) FindAll() ([]Customer, *errs.AppError) {
-	findAllSql := "select * from customers"
-	rows, err := d.db.Query(findAllSql)
-	// catch all errors that might occur
+func (d CustomerRepoDb) FindAll(status string) ([]Customer, *errs.AppError) {
+	var rows *sql.Rows
+	var err error
+
+	if status == "" {
+		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
+		rows, err = d.db.Query(findAllSql)
+	} else {
+		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where status = ?"
+		rows, err = d.db.Query(findAllSql, status)
+	}
+
 	if err != nil {
-		d.L.Printf("Error while scanning customers by id : %s", err.Error())
+		d.L.Println("Error while querying customers table " + err.Error())
 		return nil, errs.NewUnexpectedError("Unexpected database error")
 	}
-	// defer rows.Close() , error wrapped in a closure
-	defer func(rows *sql.Rows) {
-		err := rows.Close()
-		if err != nil {
-			d.L.Printf("Error while closing rows : %s", err.Error())
-		}
-	}(rows)
 
 	customers := make([]Customer, 0)
 	for rows.Next() {
 		var c Customer
-		if err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status); err != nil {
-			d.L.Printf("Error while scanning customers table : %s", err.Error())
+		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
+		if err != nil {
+			d.L.Printf("Error while scanning customers :  %v", err.Error())
 			return nil, errs.NewUnexpectedError("Unexpected database error")
 		}
 		customers = append(customers, c)

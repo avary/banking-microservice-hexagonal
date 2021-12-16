@@ -25,7 +25,7 @@ func main() {
 	// create a router and register handlers
 	r := mux.NewRouter()
 	getRtr := r.Methods(http.MethodGet).Subrouter()
-	getRtr.HandleFunc("/customers", ch.GetAllCustomers)
+	getRtr.HandleFunc("/customers/", ch.GetAllCustomers)
 	getRtr.HandleFunc("/customers/{customer_id:[0-9]+}", ch.GetCustomerByID)
 
 	// creating the server
