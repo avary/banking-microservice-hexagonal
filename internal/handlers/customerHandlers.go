@@ -23,6 +23,8 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 
 	if err != nil {
 		ch.writeResponse(w, err.StatusCode, err.AsMessage())
+		ch.L.Println(err.AsMessage())
+		return
 	} else {
 		ch.writeResponse(w, http.StatusOK, customers)
 	}

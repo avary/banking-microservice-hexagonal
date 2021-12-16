@@ -36,9 +36,11 @@ func (d CustomerRepoDb) FindAll(status string) ([]Customer, *errs.AppError) {
 	if status == "" {
 		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
 		rows, err = d.db.Query(findAllSql)
-	} else {
+	} else if status == "1" || status == "0" {
 		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where status = ?"
 		rows, err = d.db.Query(findAllSql, status)
+	} else {
+		return nil, errs.NewNotFoundError("status is not valid")
 	}
 
 	if err != nil {
@@ -61,7 +63,8 @@ func (d CustomerRepoDb) FindAll(status string) ([]Customer, *errs.AppError) {
 
 // FindById returns a customer by id
 func (d *CustomerRepoDb) FindById(id int) (*Customer, *errs.AppError) {
-	findByIdSql := "select * from customers where customer_id = ?"
+	// Note: Select * would supply data on db table order, order would mismatch with struct fields
+	findByIdSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 	row := d.db.QueryRow(findByIdSql, id)
 
 	var c Customer
