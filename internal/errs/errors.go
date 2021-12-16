@@ -1,23 +1,34 @@
 package errs
 
-import "net/http"
+import (
+	"encoding/json"
+	"io"
+	"net/http"
+)
 
 type AppError struct {
-	StatusCode int    `json:",omitempty"`
 	Message    string `json:"message"`
+	StatusCode int    `json:"statusCode,omitempty"`
 }
 
-func newAppError(message string, statusCode int) *AppError {
+func (e *AppError) ToJSON(w io.Writer) error {
+	return json.NewEncoder(w).Encode(e)
+}
+
+func (e *AppError) AsMessage() string {
+	return e.Message
+}
+
+func NewNotFoundError(m string) *AppError {
 	return &AppError{
-		Message:    message,
-		StatusCode: statusCode,
+		Message:    m,
+		StatusCode: http.StatusNotFound,
 	}
 }
 
-func NewNotFoundError(message string) *AppError {
-	return newAppError(message, http.StatusNotFound)
-}
-
-func NewUnexpectedError(message string) *AppError {
-	return newAppError(message, http.StatusInternalServerError)
+func NewUnexpectedError(m string) *AppError {
+	return &AppError{
+		Message:    m,
+		StatusCode: http.StatusInternalServerError,
+	}
 }
