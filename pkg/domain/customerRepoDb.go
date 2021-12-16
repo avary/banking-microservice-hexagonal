@@ -29,11 +29,13 @@ func NewCustomerRepoDb(L *log.Logger) CustomerRepoDb {
 }
 
 // FindAll returns all customers from the database
-func (d *CustomerRepoDb) FindAll() ([]Customer, error) {
+func (d *CustomerRepoDb) FindAll() ([]Customer, *errs.AppError) {
 	findAllSql := "select * from customers"
 	rows, err := d.db.Query(findAllSql)
+	// catch all errors that might occur
 	if err != nil {
-		d.L.Printf("Error while querying on customer table : %s", err.Error())
+		d.L.Printf("Error while scanning customers by id : %s", err.Error())
+		return nil, errs.NewUnexpectedError("Unexpected database error")
 	}
 	// defer rows.Close() , error wrapped in a closure
 	defer func(rows *sql.Rows) {
@@ -48,7 +50,7 @@ func (d *CustomerRepoDb) FindAll() ([]Customer, error) {
 		var c Customer
 		if err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status); err != nil {
 			d.L.Printf("Error while scanning customers table : %s", err.Error())
-			return nil, err
+			return nil, errs.NewUnexpectedError("Unexpected database error")
 		}
 		customers = append(customers, c)
 	}

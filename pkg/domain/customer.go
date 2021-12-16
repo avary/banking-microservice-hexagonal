@@ -13,6 +13,6 @@ type Customer struct {
 
 // CustomerRepository is a SECONDARY PORT on Hexagonal architecture
 type CustomerRepository interface {
-	FindAll() ([]Customer, error)
+	FindAll() ([]Customer, *errs.AppError)
 	FindById(id string) (*Customer, *errs.AppError)
 }
