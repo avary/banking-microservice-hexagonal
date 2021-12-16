@@ -16,7 +16,7 @@ import (
 const port = ":5000"
 
 func main() {
-	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
+	l := log.New(os.Stdout, "customer-api ", log.LstdFlags)
 
 	// wire up the handlers
 	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(domain.NewCustomerRepoDb(l)), L: l}
