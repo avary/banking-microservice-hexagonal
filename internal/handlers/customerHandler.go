@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ashtishad/banking-microservice-hexagonal/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
@@ -45,21 +44,16 @@ func (ch *CustomerHandlers) GetCustomerByID(w http.ResponseWriter, r *http.Reque
 	ch.L.Printf("id = %v", id)
 
 	customer, err := ch.Service.GetById(id)
-	if err != nil && err.StatusCode == http.StatusNotFound {
-		// why not http.Error? it sets content type as text/plain
-		w.WriteHeader(err.StatusCode)
-		_, _ = fmt.Fprintln(w, err.Message)
-		return
-	}
-	// catch other errors might occur, Internal Server Error
 	if err != nil {
-		w.WriteHeader(err.StatusCode)
-		_, _ = fmt.Fprintln(w, err.Message)
-		return
+		ch.writeResponse(w, err.StatusCode, err.Message)
 	}
+	ch.writeResponse(w, http.StatusOK, customer)
+}
 
-	if err := json.NewEncoder(w).Encode(customer); err != nil {
-		http.Error(w, "Unable to get customer by id.", http.StatusBadRequest)
+func (ch *CustomerHandlers) writeResponse(w http.ResponseWriter, statusCode int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
 		ch.L.Printf("Error while encoding json : %v", err)
 		return
 	}
