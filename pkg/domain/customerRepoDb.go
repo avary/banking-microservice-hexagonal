@@ -52,7 +52,7 @@ func (d CustomerRepoDb) FindAll(status string) ([]Customer, *errs.AppError) {
 }
 
 // FindById returns a customer by id
-func (d *CustomerRepoDb) FindById(id string) (*Customer, *errs.AppError) {
+func (d CustomerRepoDb) FindById(id string) (*Customer, *errs.AppError) {
 	// Note: Select * would supply data on db table order, order would mismatch with struct fields
 	findByIdSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 	row := d.db.QueryRow(findByIdSql, id)

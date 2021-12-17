@@ -13,7 +13,6 @@ type CustomerService interface {
 	GetById(id int) (*dto.CustomerResponse, *errs.AppError)
 }
 
-// TODO: repo domain.CustomerRepository
 type DefaultCustomerService struct {
 	repo domain.CustomerRepository
 }

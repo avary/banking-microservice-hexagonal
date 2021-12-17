@@ -22,7 +22,7 @@ func main() {
 	dbClient := service.GetDbClient(l)
 	customerDbConn := domain.NewCustomerRepoDb(dbClient, l)
 	accountDbConn := domain.NewAccountRepoDb(dbClient, l)
-	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(&customerDbConn), L: l}
+	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(customerDbConn), L: l}
 	ah := handlers.AccountHandlers{Service: service.NewAccountService(accountDbConn), L: l}
 
 	// create a router and register handlers
