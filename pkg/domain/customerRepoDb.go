@@ -5,7 +5,6 @@ import (
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
-	"time"
 )
 
 type CustomerRepoDb struct {
@@ -15,17 +14,8 @@ type CustomerRepoDb struct {
 
 // NewCustomerRepoDb creates a new customer repository
 // https://github.com/go-sql-driver/mysql
-func NewCustomerRepoDb(L *log.Logger) CustomerRepoDb {
-	db, err := sql.Open("mysql", "root:1234@tcp(localhost:3306)/banking")
-	if err != nil {
-		panic(err)
-	}
-
-	db.SetConnMaxLifetime(time.Minute * 3)
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
-
-	return CustomerRepoDb{db, L}
+func NewCustomerRepoDb(dbClient *sql.DB, L *log.Logger) CustomerRepoDb {
+	return CustomerRepoDb{dbClient, L}
 }
 
 // FindAll returns all customers from the database

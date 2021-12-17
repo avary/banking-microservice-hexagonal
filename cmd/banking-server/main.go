@@ -19,8 +19,11 @@ func main() {
 	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
 
 	// wire up the handlers
-	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(domain.NewCustomerRepoDb(l)), L: l}
-	//ch := handlers.CustomerHandlers{Service: service.NewCustomerService(domain.NewCustomerRepositoryStub()), L: l}
+	dbClient := service.NewDBClient(l)
+	customerDbConn := domain.NewCustomerRepoDb(dbClient, l)
+	//accountDbConn := domain.NewAccountRepoDb(dbClient, l)
+	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(customerDbConn), L: l}
+	//ah := handlers.AccountHandlers{Service: service.NewAccountService(accountDbConn), L: l}
 
 	// create a router and register handlers
 	r := mux.NewRouter()
