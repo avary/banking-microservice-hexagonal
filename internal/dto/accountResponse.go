@@ -1,5 +1,5 @@
 package dto
 
-type NewAccountResponse struct {
+type AccountResponse struct {
 	AccountId string `json:"account_id"`
 }

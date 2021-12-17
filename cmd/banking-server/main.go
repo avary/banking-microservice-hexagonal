@@ -19,17 +19,20 @@ func main() {
 	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
 
 	// wire up the handlers
-	dbClient := service.NewDBClient(l)
+	dbClient := service.GetDbClient(l)
 	customerDbConn := domain.NewCustomerRepoDb(dbClient, l)
-	//accountDbConn := domain.NewAccountRepoDb(dbClient, l)
-	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(customerDbConn), L: l}
-	//ah := handlers.AccountHandlers{Service: service.NewAccountService(accountDbConn), L: l}
+	accountDbConn := domain.NewAccountRepoDb(dbClient, l)
+	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(&customerDbConn), L: l}
+	ah := handlers.AccountHandlers{Service: service.NewAccountService(accountDbConn), L: l}
 
 	// create a router and register handlers
 	r := mux.NewRouter()
 	getRtr := r.Methods(http.MethodGet).Subrouter()
 	getRtr.HandleFunc("/customers/", ch.GetAllCustomers)
 	getRtr.HandleFunc("/customers/{customer_id:[0-9]+}", ch.GetCustomerByID)
+
+	postRtr := r.Methods(http.MethodPut).Subrouter()
+	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount)
 
 	// creating the server
 	srv := &http.Server{

@@ -4,6 +4,7 @@ import (
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/dto"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
 	"github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
+	"strconv"
 )
 
 // CustomerService is our PRIMARY PORT
@@ -12,17 +13,18 @@ type CustomerService interface {
 	GetById(id int) (*dto.CustomerResponse, *errs.AppError)
 }
 
+// TODO: repo domain.CustomerRepository
 type DefaultCustomerService struct {
-	repoDb domain.CustomerRepoDb
+	repo domain.CustomerRepository
 }
 
-func NewCustomerService(repo domain.CustomerRepoDb) DefaultCustomerService {
-	return DefaultCustomerService{repoDb: repo}
+func NewCustomerService(repo domain.CustomerRepository) DefaultCustomerService {
+	return DefaultCustomerService{repo: repo}
 }
 
 // GetAllCustomers returns all customers
 func (s DefaultCustomerService) GetAllCustomers(status string) ([]dto.CustomerResponse, *errs.AppError) {
-	customers, err := s.repoDb.FindAll(status)
+	customers, err := s.repo.FindAll(status)
 	if err != nil || len(customers) == 0 {
 		return nil, err
 	}
@@ -36,7 +38,7 @@ func (s DefaultCustomerService) GetAllCustomers(status string) ([]dto.CustomerRe
 
 // GetById returns customer by id
 func (s DefaultCustomerService) GetById(id int) (*dto.CustomerResponse, *errs.AppError) {
-	c, err := s.repoDb.FindById(id)
+	c, err := s.repo.FindById(strconv.Itoa(id))
 	if err != nil {
 		return nil, err
 	}
