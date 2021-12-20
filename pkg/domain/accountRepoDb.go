@@ -2,6 +2,7 @@ package domain
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
 	"log"
 	"strconv"
@@ -27,26 +28,19 @@ func (r AccountRepoDb) Save(a Account) (*Account, *errs.AppError) {
 		return nil, errs.NewNotFoundError("Customer not found in database, can't create account")
 	}
 
-	// create account for this existing customer
-	stmt, err := r.db.Prepare("INSERT INTO accounts (customer_id, opening_date, account_type, amount,status) VALUES (?, ?, ?, ? , ?)")
-	if err != nil {
-		r.L.Printf("Error while preparing statement : %s", err.Error())
-		return nil, errs.NewInternalServerError(err.Error())
-	}
-	defer statementClose(stmt)
+	// create account for this existing customer on postgres
 
-	res, err := stmt.Exec(a.CustomerId, a.OpeningDate, a.AccountType, a.Amount, a.Status)
+	sqlStatement := `
+	INSERT INTO accounts (customer_id, opening_date, account_type, amount,status)
+	VALUES ($1, $2, $3, $4, $5)
+	RETURNING account_id`
+	var id int64
+	err := r.db.QueryRow(sqlStatement, a.CustomerId, a.OpeningDate, a.AccountType, a.Amount, a.Status).Scan(&id)
 	if err != nil {
-		r.L.Printf("Error while executing statement : %s", err.Error())
-		return nil, errs.NewInternalServerError(err.Error())
+		panic(err)
 	}
+	fmt.Println("New account ID is:", id)
 
-	// get the id of the account that was just inserted
-	id, err := res.LastInsertId()
-	if err != nil {
-		r.L.Printf("Error while getting last insert id : %s", err.Error())
-		return nil, errs.NewInternalServerError(err.Error())
-	}
 	// set the id of the account. why strconv and why not string(id)? because the id is a string,
 	// normally string(id) converts it to unicode codepoint
 	a.AccountId = strconv.FormatInt(id, 10)
@@ -55,7 +49,7 @@ func (r AccountRepoDb) Save(a Account) (*Account, *errs.AppError) {
 
 func CheckCustomerIdExists(db *sql.DB, reqCustomerId string) error {
 	var c Customer
-	findIdSql := "select customer_id from customers where customer_id = ?"
+	findIdSql := "select customer_id from customers where customer_id = $1"
 	row := db.QueryRow(findIdSql, reqCustomerId)
 	err := row.Scan(&c.Id)
 	if err == sql.ErrNoRows {

@@ -3,7 +3,7 @@ package domain
 import (
 	"database/sql"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 	"log"
 )
 
@@ -13,7 +13,6 @@ type CustomerRepoDb struct {
 }
 
 // NewCustomerRepoDb creates a new customer repository
-// https://github.com/go-sql-driver/mysql
 func NewCustomerRepoDb(dbClient *sql.DB, L *log.Logger) CustomerRepoDb {
 	return CustomerRepoDb{dbClient, L}
 }
@@ -24,10 +23,12 @@ func (d CustomerRepoDb) FindAll(status string) ([]Customer, *errs.AppError) {
 	var err error
 
 	if status == "" {
-		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
+		// (`SELECT name FROM users WHERE favorite_fruit = $1
+		//	OR age BETWEEN $2 AND $2 + 3`, "orange", 64)
+		findAllSql := `SELECT customer_id, name, city, zipcode, date_of_birth, status FROM customers`
 		rows, err = d.db.Query(findAllSql)
 	} else if status == "1" || status == "0" {
-		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where status = ?"
+		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where status = $1"
 		rows, err = d.db.Query(findAllSql, status)
 	} else {
 		return nil, errs.NewNotFoundError("status is not valid")
@@ -54,7 +55,7 @@ func (d CustomerRepoDb) FindAll(status string) ([]Customer, *errs.AppError) {
 // FindById returns a customer by id
 func (d CustomerRepoDb) FindById(id string) (*Customer, *errs.AppError) {
 	// Note: Select * would supply data on db table order, order would mismatch with struct fields
-	findByIdSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
+	findByIdSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = $1"
 	row := d.db.QueryRow(findByIdSql, id)
 
 	var c Customer

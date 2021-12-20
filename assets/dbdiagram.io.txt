@@ -1,0 +1,61 @@
+Table customers as C {
+  customer_id bigserial [pk, not null,unique] // auto-increment
+  name varchar [not null]
+  date_of_birth timestamptz [default: `now()`]
+  city varchar [not null]
+  zipcode varchar [not null]
+  status SMALLINT [not null, default: 1]
+  
+  Indexes {
+    status
+    customer_id
+    name
+  }
+}
+
+Table accounts as A{
+  account_id bigserial [pk,unique,not null]
+  customer_id bigint [not null,ref: > C.customer_id]
+  opening_date timestamptz [default: 'now()',not null]
+  account_type varchar [not null]
+  amount decimal [not null]
+  status SMALLINT [not null]
+  
+  Indexes {
+    customer_id
+    account_id
+    account_type
+    status
+  }
+ }
+ 
+Table transactions as T{
+  transaction_id bigserial [pk,unique,not null]
+  account_id bigint [not null,ref: > C.customer_id]
+  amount decimal [not null]
+  transaction_type varchar [not null]
+  transaction_date timestamptz [default: 'now()',not null]
+  
+   Indexes {
+    account_id
+    transaction_type
+  }
+  
+}
+
+
+Table users as U{
+  username varchar [pk]
+  password varchar [not null]
+  role varchar [not null]
+  customer_id bigint [not null,ref: - C.customer_id]
+  created_on timestamptz [default: 'now()',not null]
+  
+  Indexes {
+    username
+    role
+  }
+}
+
+
+// > many-to-one; < one-to-many; - one-to-one
