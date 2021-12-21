@@ -33,6 +33,7 @@ func main() {
 
 	postRtr := r.Methods(http.MethodPost).Subrouter()
 	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount)
+	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.MakeTransaction)
 
 	// creating the server
 	srv := &http.Server{

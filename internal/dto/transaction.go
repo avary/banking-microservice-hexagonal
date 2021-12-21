@@ -21,7 +21,7 @@ func (r TransactionRequest) IsTransactionTypeDeposit() bool {
 	return r.TransactionType == lib.DEPOSIT
 }
 
-func (r TransactionRequest) Validate() *errs.AppError {
+func (r TransactionRequest) ValidateTransactionJSON() *errs.AppError {
 	if !r.IsTransactionTypeWithdrawal() && !r.IsTransactionTypeDeposit() {
 		return errs.NewValidationError("Transaction type can only be deposit or withdrawal")
 	}

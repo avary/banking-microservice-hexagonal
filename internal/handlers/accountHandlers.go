@@ -14,7 +14,7 @@ type AccountHandlers struct {
 	L       *log.Logger
 }
 
-func (ah AccountHandlers) NewAccount(w http.ResponseWriter, r *http.Request) {
+func (h AccountHandlers) NewAccount(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerId := vars["customer_id"]
 	var request dto.NewAccountRequest
@@ -23,11 +23,39 @@ func (ah AccountHandlers) NewAccount(w http.ResponseWriter, r *http.Request) {
 		renderJSON(w, http.StatusBadRequest, err.Error())
 	} else {
 		request.CustomerId = customerId
-		account, appError := ah.Service.NewAccount(request)
+		account, appError := h.Service.NewAccount(request)
 		if appError != nil {
 			renderJSON(w, appError.StatusCode, appError.AsMessage())
 		} else {
 			renderJSON(w, http.StatusCreated, account)
+		}
+	}
+}
+
+// MakeTransaction endpoint customers/2001/account/95470
+func (h AccountHandlers) MakeTransaction(w http.ResponseWriter, r *http.Request) {
+	// get the account_id and customer_id from the URL
+	vars := mux.Vars(r)
+	accountId := vars["account_id"]
+	customerId := vars["customer_id"]
+
+	// decode incoming request
+	var request dto.TransactionRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		renderJSON(w, http.StatusBadRequest, err.Error())
+	} else {
+
+		//build the request object
+		request.AccountId = accountId
+		request.CustomerId = customerId
+
+		// make transaction
+		account, appError := h.Service.MakeTransaction(request)
+
+		if appError != nil {
+			renderJSON(w, appError.StatusCode, appError.AsMessage())
+		} else {
+			renderJSON(w, http.StatusOK, account)
 		}
 	}
 }

@@ -18,7 +18,8 @@ type Account struct {
 
 type AccountRepository interface {
 	Save(Account) (*Account, *errs.AppError)
-	//FindById(accountId string) (*Account, *errs.AppError)
+	FindById(string) (*Account, *errs.AppError)
+	SaveTransaction(Transaction) (*Transaction, *errs.AppError)
 }
 
 func NewAccount(customerId, accountType string, amount float64) Account {
@@ -29,6 +30,13 @@ func NewAccount(customerId, accountType string, amount float64) Account {
 		Amount:      amount,
 		Status:      "1",
 	}
+}
+
+func (a Account) CanWithdraw(amount float64) bool {
+	if a.Amount < amount {
+		return false
+	}
+	return true
 }
 
 func (a Account) ToNewAccountResponseDto() dto.AccountResponse {

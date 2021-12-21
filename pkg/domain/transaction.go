@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/dto"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/lib"
+	"time"
 )
 
 type Transaction struct {
@@ -11,6 +12,15 @@ type Transaction struct {
 	Amount          float64 `db:"amount"`
 	TransactionType string  `db:"transaction_type"`
 	TransactionDate string  `db:"transaction_date"`
+}
+
+func NewTransaction(transactionDto dto.TransactionRequest) Transaction {
+	return Transaction{
+		AccountId:       transactionDto.AccountId,
+		Amount:          transactionDto.Amount,
+		TransactionType: transactionDto.TransactionType,
+		TransactionDate: time.Now().Format(lib.DbTSLayout),
+	}
 }
 
 func (t Transaction) IsWithdrawal() bool {
