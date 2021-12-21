@@ -58,9 +58,9 @@ func CheckCustomerIdExists(db *sql.DB, reqCustomerId string) error {
 	return nil
 }
 
-func statementClose(stmt *sql.Stmt) {
-	err := stmt.Close()
-	if err != nil {
-		log.Printf("Error while closing the statement: %v\n", err)
-	}
-}
+//func statementClose(stmt *sql.Stmt) {
+//	err := stmt.Close()
+//	if err != nil {
+//		log.Printf("Error while closing the statement: %v\n", err)
+//	}
+//}
