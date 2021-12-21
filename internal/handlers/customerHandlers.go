@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"github.com/ashtishad/banking-microservice-hexagonal/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
@@ -22,11 +21,11 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 	customers, err := ch.Service.GetAllCustomers(status)
 
 	if err != nil {
-		ch.writeResponse(w, err.StatusCode, err.AsMessage())
+		renderJSON(w, err.StatusCode, err.AsMessage())
 		ch.L.Println(err.AsMessage())
 		return
 	} else {
-		ch.writeResponse(w, http.StatusOK, customers)
+		renderJSON(w, http.StatusOK, customers)
 	}
 }
 
@@ -39,17 +38,8 @@ func (ch *CustomerHandlers) GetCustomerByID(w http.ResponseWriter, r *http.Reque
 
 	customer, err := ch.Service.GetById(id)
 	if err != nil {
-		ch.writeResponse(w, err.StatusCode, err.AsMessage())
+		renderJSON(w, err.StatusCode, err.AsMessage())
 	} else {
-		ch.writeResponse(w, http.StatusOK, customer)
-	}
-}
-
-func (ch *CustomerHandlers) writeResponse(w http.ResponseWriter, code int, data interface{}) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(code)
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		ch.L.Println("Error encoding response: ", err)
-		panic(err)
+		renderJSON(w, http.StatusOK, customer)
 	}
 }
