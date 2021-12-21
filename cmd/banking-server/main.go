@@ -31,7 +31,7 @@ func main() {
 	getRtr.HandleFunc("/customers/", ch.GetAllCustomers)
 	getRtr.HandleFunc("/customers/{customer_id:[0-9]+}", ch.GetCustomerByID)
 
-	postRtr := r.Methods(http.MethodPut).Subrouter()
+	postRtr := r.Methods(http.MethodPost).Subrouter()
 	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount)
 
 	// creating the server

@@ -4,6 +4,7 @@ import (
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/dto"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/lib"
+	"time"
 )
 
 type Account struct {
@@ -23,7 +24,7 @@ type AccountRepository interface {
 func NewAccount(customerId, accountType string, amount float64) Account {
 	return Account{
 		CustomerId:  customerId,
-		OpeningDate: lib.DbTSLayout,
+		OpeningDate: time.Now().Format(lib.DbTSLayout),
 		AccountType: accountType,
 		Amount:      amount,
 		Status:      "1",

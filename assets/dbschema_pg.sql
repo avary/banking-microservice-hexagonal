@@ -29,7 +29,7 @@ CREATE INDEX ON "accounts" ("account_type");
 CREATE INDEX ON "accounts" ("status");
 
 ALTER TABLE "accounts" ADD FOREIGN KEY ("customer_id") REFERENCES "customers" ("customer_id");
-ALTER SEQUENCE accounts_account_id_seq RESTART WITH 95476
+ALTER SEQUENCE accounts_account_id_seq RESTART WITH 95476;
 
 
 CREATE TABLE "transactions" (
