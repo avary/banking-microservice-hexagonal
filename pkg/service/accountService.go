@@ -16,7 +16,7 @@ type DefaultAccountService struct {
 }
 
 func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.AccountResponse, *errs.AppError) {
-	err := req.Validate()
+	err := req.ValidateAmount()
 	if err != nil {
 		return nil, err
 	}

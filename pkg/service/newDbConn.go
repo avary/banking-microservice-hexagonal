@@ -27,10 +27,11 @@ func GetDbClient(l *log.Logger) *sql.DB {
 
 	err = db.Ping()
 	if err != nil {
+		l.Printf("Error while establishing db connection : %s\n", err)
 		panic(err)
 	}
 
-	fmt.Println("Successfully connected!")
+	l.Println("postgres db  is successfully connected!")
 
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)

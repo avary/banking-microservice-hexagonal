@@ -23,8 +23,6 @@ func (d CustomerRepoDb) FindAll(status string) ([]Customer, *errs.AppError) {
 	var err error
 
 	if status == "" {
-		// (`SELECT name FROM users WHERE favorite_fruit = $1
-		//	OR age BETWEEN $2 AND $2 + 3`, "orange", 64)
 		findAllSql := `SELECT customer_id, name, city, zipcode, date_of_birth, status FROM customers`
 		rows, err = d.db.Query(findAllSql)
 	} else if status == "1" || status == "0" {

@@ -29,7 +29,6 @@ func (r AccountRepoDb) Save(a Account) (*Account, *errs.AppError) {
 	}
 
 	// create account for this existing customer on postgres
-
 	sqlStatement := `
 	INSERT INTO accounts (customer_id, opening_date, account_type, amount,status)
 	VALUES ($1, $2, $3, $4, $5)
@@ -57,10 +56,3 @@ func CheckCustomerIdExists(db *sql.DB, reqCustomerId string) error {
 	}
 	return nil
 }
-
-//func statementClose(stmt *sql.Stmt) {
-//	err := stmt.Close()
-//	if err != nil {
-//		log.Printf("Error while closing the statement: %v\n", err)
-//	}
-//}
