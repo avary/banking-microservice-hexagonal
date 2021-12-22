@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
-	_ "github.com/jackc/pgx/v4/stdlib"
 	"log"
 	"strconv"
 )
