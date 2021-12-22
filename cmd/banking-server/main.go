@@ -19,9 +19,13 @@ func main() {
 	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
 
 	// wire up the handlers
-	dbClient := service.GetDbClient(l)
-	customerDbConn := domain.NewCustomerRepoDb(dbClient, l)
-	accountDbConn := domain.NewAccountRepoDb(dbClient, l)
+	db := service.GetDbClient(l)
+	defer func() {
+		_ = db.Close()
+		l.Println("DB connection pool closed")
+	}()
+	customerDbConn := domain.NewCustomerRepoDb(db, l)
+	accountDbConn := domain.NewAccountRepoDb(db, l)
 	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(customerDbConn), L: l}
 	ah := handlers.AccountHandlers{Service: service.NewAccountService(accountDbConn), L: l}
 
