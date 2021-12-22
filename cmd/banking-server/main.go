@@ -18,7 +18,7 @@ const port = ":5000"
 func main() {
 	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
 
-	// wire up the handlers
+	// db connection pool config
 	db := service.GetDbClient(l)
 	defer func() {
 		_ = db.Close()
@@ -26,6 +26,8 @@ func main() {
 	}()
 	customerDbConn := domain.NewCustomerRepoDb(db, l)
 	accountDbConn := domain.NewAccountRepoDb(db, l)
+
+	// wire up the handlers
 	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(customerDbConn), L: l}
 	ah := handlers.AccountHandlers{Service: service.NewAccountService(accountDbConn), L: l}
 
