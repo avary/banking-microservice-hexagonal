@@ -3,12 +3,14 @@ package service
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v4/stdlib"
 	"log"
+	"net/url"
 	"time"
 )
 
 const (
+	scheme   = "postgres"
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
@@ -17,21 +19,24 @@ const (
 )
 
 func GetDbClient(l *log.Logger) *sql.DB {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
+	dsn := url.URL{
+		Scheme: scheme,
+		User:   url.UserPassword(user, password),
+		Host:   fmt.Sprintf("%s:%d", host, port),
+		Path:   dbname,
+	}
+
+	q := dsn.Query()
+	q.Set("sslmode", "disable")
+
+	dsn.RawQuery = q.Encode()
+
+	db, err := sql.Open("pgx", dsn.String())
 	if err != nil {
 		panic(err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		l.Printf("Error while establishing db connection : %s\n", err)
-		panic(err)
-	}
-
-	l.Println("postgres db  is successfully connected!")
+	l.Printf("successfully connected to database %s", dsn.String())
 
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)

@@ -3,7 +3,7 @@ package domain
 import (
 	"database/sql"
 	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v4/stdlib"
 	"log"
 )
 

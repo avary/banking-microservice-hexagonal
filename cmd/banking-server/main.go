@@ -55,7 +55,7 @@ func main() {
 func startServer(srv *http.Server, l *log.Logger) {
 	l.Printf("Starting server on port %s", port)
 	if err := srv.ListenAndServe(); err != nil {
-		l.Printf("Error starting server: %s", err)
+		l.Printf("%s", err.Error())
 	}
 }
 
