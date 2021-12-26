@@ -42,12 +42,15 @@ func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto
 	if err != nil {
 		return nil, err
 	}
+
+	// fetching the account
+	account, err := s.repo.FindById(req.AccountId, req.CustomerId)
+	if err != nil {
+		return nil, errs.NewNotFoundError("Could not find account")
+	}
+
 	// server side validation for checking the available balance in the account
 	if req.IsTransactionTypeWithdrawal() {
-		account, err := s.repo.FindById(req.AccountId)
-		if err != nil {
-			return nil, err
-		}
 		if !account.CanWithdraw(req.Amount) {
 			return nil, errs.NewValidationError("Insufficient balance in the account")
 		}

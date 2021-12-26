@@ -88,7 +88,7 @@ func (d AccountRepoDb) SaveTransaction(t Transaction) (*Transaction, *errs.AppEr
 	}
 
 	// Getting the latest account information from the accounts table
-	account, appErr := d.FindById(t.AccountId)
+	account, appErr := d.GetAccount(t.AccountId)
 	if appErr != nil {
 		return nil, appErr
 	}
@@ -99,7 +99,24 @@ func (d AccountRepoDb) SaveTransaction(t Transaction) (*Transaction, *errs.AppEr
 	return &t, nil
 }
 
-func (d AccountRepoDb) FindById(accountId string) (*Account, *errs.AppError) {
+func (d AccountRepoDb) FindById(accountId string, customerId string) (*Account, *errs.AppError) {
+	sqlGetAccount := "SELECT account_id, customer_id, opening_date, account_type, amount from accounts where account_id = $1 AND customer_id = $2"
+	row := d.db.QueryRow(sqlGetAccount, accountId, customerId)
+
+	var a Account
+	err := row.Scan(&a.AccountId, &a.CustomerId, &a.OpeningDate, &a.AccountType, &a.Amount)
+	if err == sql.ErrNoRows {
+		d.L.Printf("Error while scanning accounts by account_id & customer_id : %s", err.Error())
+		return nil, errs.NewNotFoundError("Account not found")
+	}
+	if err != nil {
+		d.L.Printf("Error while getting account : %s", err.Error())
+		return nil, errs.NewUnexpectedError("Unexpected database error")
+	}
+	return &a, nil
+}
+
+func (d AccountRepoDb) GetAccount(accountId string) (*Account, *errs.AppError) {
 	sqlGetAccount := "SELECT account_id, customer_id, opening_date, account_type, amount from accounts where account_id = $1"
 	row := d.db.QueryRow(sqlGetAccount, accountId)
 
