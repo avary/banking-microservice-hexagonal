@@ -18,7 +18,8 @@ type Account struct {
 
 type AccountRepository interface {
 	Save(Account) (*Account, *errs.AppError)
-	FindById(string) (*Account, *errs.AppError)
+	GetAccount(accountId string) (*Account, *errs.AppError)
+	FindById(accountId string, customerId string) (*Account, *errs.AppError)
 	SaveTransaction(Transaction) (*Transaction, *errs.AppError)
 }
 
