@@ -1,7 +1,7 @@
 CREATE TABLE "customers" (
   "customer_id" bigserial PRIMARY KEY NOT NULL,
   "name" varchar NOT NULL,
-  "date_of_birth" timestamp DEFAULT (now()),
+  "date_of_birth" date NOT NULL,
   "city" varchar NOT NULL,
   "zipcode" varchar NOT NULL,
   "status" SMALLINT NOT NULL DEFAULT 1
@@ -38,6 +38,12 @@ ALTER TABLE "transactions" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" 
 
 ALTER TABLE "users" ADD FOREIGN KEY ("customer_id") REFERENCES "customers" ("customer_id");
 
+
+
+
+-- CREATE INDEX AFTER BULK INSERT CSV , PREFER PARTIAL INDEX
+
+
 CREATE INDEX ON "customers" ("status");
 
 CREATE INDEX ON "customers" ("customer_id");
@@ -61,24 +67,27 @@ CREATE INDEX ON "users" ("username");
 CREATE INDEX ON "users" ("role");
 
 
+
+-- INSERT RECORDS
+
 INSERT INTO customers VALUES
-                            (2000,'Steve','1978-12-15','Delhi','110075',1),
-                            (2001,'Arian','1988-05-21','Newburgh, NY','12550',1),
-                            (2002,'Hadley','1988-04-30','Inglewood, NJ','07631',1),
-                            (2003,'Ben','1988-01-04','Manchester, NH','03102',0),
-                            (2004,'Nina','1988-05-14','Blackstone, MI','48348',1),
-                            (2005,'Osman','1988-11-08','Hyattsville, MD','20782',0);
-ALTER SEQUENCE customers_customer_id_seq RESTART WITH 2006;
+                            (1,'Steve','1978-12-15','Delhi','110075',1),
+                            (2,'Arian','1988-05-21','Newburgh, NY','12550',1),
+                            (3,'Hadley','1988-04-30','Inglewood, NJ','07631',1),
+                            (4,'Ben','1988-01-04','Manchester, NH','03102',0),
+                            (5,'Nina','1988-05-14','Blackstone, MI','48348',1),
+                            (6,'Osman','1988-11-08','Hyattsville, MD','20782',0);
+ALTER SEQUENCE customers_customer_id_seq RESTART WITH 7;
 
 INSERT INTO accounts VALUES
-                           (95470,2000,'2020-08-22 10:20:06', 'saving', 6823.23, 1),
-                           (95471,2002,'2020-08-09 10:27:22', 'checking', 3342.96, 1),
-                           (95472,2001,'2020-08-09 10:35:22', 'saving', 7000, 1),
-                           (95473,2001,'2020-08-09 10:38:22', 'saving', 5861.86, 1);
+                           (1,1,'2020-08-22 10:20:06', 'saving', 6823.23, 1),
+                           (2,1,'2020-08-09 10:27:22', 'checking', 3342.96, 1),
+                           (3,2,'2020-08-09 10:35:22', 'saving', 7000, 1),
+                           (4,3,'2020-08-09 10:38:22', 'saving', 5861.86, 1);
 
-ALTER SEQUENCE accounts_account_id_seq RESTART WITH 95474;
+ALTER SEQUENCE accounts_account_id_seq RESTART WITH 5;
 
 INSERT INTO users VALUES
                         ('admin','abc123','admin', NULL, '2020-08-09 10:27:22'),
-                        ('2001','abc123','user', 2001, '2020-08-09 10:27:22'),
-                        ('2000','abc123','user', 2002, '2020-08-09 10:27:22');
+                        ('1','abc123','user', 2001, '2020-08-09 10:27:22'),
+                        ('2','abc123','user', 2002, '2020-08-09 10:27:22');
