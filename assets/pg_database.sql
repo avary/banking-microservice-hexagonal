@@ -89,5 +89,5 @@ ALTER SEQUENCE accounts_account_id_seq RESTART WITH 5;
 
 INSERT INTO users VALUES
                         ('admin','abc123','admin', NULL, '2020-08-09 10:27:22'),
-                        ('1','abc123','user', 2001, '2020-08-09 10:27:22'),
-                        ('2','abc123','user', 2002, '2020-08-09 10:27:22');
+                        ('1','abc123','user', 1, '2020-08-09 10:27:22'),
+                        ('2','abc123','user', 2, '2020-08-09 10:27:22');

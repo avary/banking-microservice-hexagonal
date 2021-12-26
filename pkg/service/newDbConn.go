@@ -13,7 +13,7 @@ const (
 	scheme   = "postgres"
 	host     = "localhost"
 	port     = 5432
-	user     = "postgres"
+	user     = "root"
 	password = "1234"
 	dbname   = "banking"
 )
