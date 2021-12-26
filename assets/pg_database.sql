@@ -1,9 +1,9 @@
 CREATE TABLE "customers" (
   "customer_id" bigserial PRIMARY KEY NOT NULL,
-  "name" varchar NOT NULL,
+  "name" varchar(100) NOT NULL,
   "date_of_birth" date NOT NULL,
-  "city" varchar NOT NULL,
-  "zipcode" varchar NOT NULL,
+  "city" varchar(100) NOT NULL,
+  "zipcode" varchar(10) NOT NULL,
   "status" SMALLINT NOT NULL DEFAULT 1
 );
 
@@ -11,24 +11,24 @@ CREATE TABLE "accounts" (
   "account_id" bigserial PRIMARY KEY NOT NULL,
   "customer_id" bigint NOT NULL,
   "opening_date" timestamp NOT NULL DEFAULT 'now()',
-  "account_type" varchar NOT NULL,
-  "amount" decimal NOT NULL,
+  "account_type" varchar(10) NOT NULL,
+  "amount" decimal(10,2) NOT NULL,
   "status" SMALLINT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE "transactions" (
   "transaction_id" bigserial PRIMARY KEY NOT NULL,
   "account_id" bigint NOT NULL,
-  "amount" decimal NOT NULL,
-  "transaction_type" varchar NOT NULL,
+  "amount" decimal(10,2) NOT NULL,
+  "transaction_type" varchar(10) NOT NULL,
   "transaction_date" timestamp NOT NULL DEFAULT 'now()'
 );
 
 CREATE TABLE "users" (
-  "username" varchar PRIMARY KEY,
-  "password" varchar NOT NULL,
-  "role" varchar NOT NULL,
-  "customer_id" bigint,
+  "username" varchar(100) PRIMARY KEY,
+  "password" varchar(20) NOT NULL,
+  "role" varchar(10) NOT NULL,
+  "customer_id" bigint DEFAULT NULL,
   "created_on" timestamp NOT NULL DEFAULT 'now()'
 );
 
@@ -72,11 +72,11 @@ CREATE INDEX ON "users" ("role");
 
 INSERT INTO customers VALUES
                             (1,'Steve','1978-12-15','Delhi','110075',1),
-                            (2,'Arian','1988-05-21','Newburgh, NY','12550',1),
-                            (3,'Hadley','1988-04-30','Inglewood, NJ','07631',1),
-                            (4,'Ben','1988-01-04','Manchester, NH','03102',0),
-                            (5,'Nina','1988-05-14','Blackstone, MI','48348',1),
-                            (6,'Osman','1988-11-08','Hyattsville, MD','20782',0);
+                            (2,'Arian','1988-05-21','Newburgh','12550',1),
+                            (3,'Hadley','1988-04-30','Inglewood','07631',1),
+                            (4,'Ben','1988-01-04','Manchester','03102',0),
+                            (5,'Nina','1988-05-14','Blackstone','48348',1),
+                            (6,'Osman','1988-11-08','Hyattsville','20782',0);
 ALTER SEQUENCE customers_customer_id_seq RESTART WITH 7;
 
 INSERT INTO accounts VALUES
