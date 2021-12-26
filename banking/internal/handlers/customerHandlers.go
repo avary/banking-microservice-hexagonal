@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/ashtishad/banking-microservice-hexagonal/pkg/service"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

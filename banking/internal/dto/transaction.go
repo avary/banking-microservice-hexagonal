@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/lib"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/lib"
 )
 
 type TransactionRequest struct {

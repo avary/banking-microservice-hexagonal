@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/dto"
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
-	"github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/domain"
 	"strconv"
 )
 

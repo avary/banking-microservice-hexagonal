@@ -1,31 +1,31 @@
 package service
 
 import (
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/dto"
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
-	"github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
+	dto2 "github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
+	domain2 "github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/domain"
 )
 
 // AccountService is the Primary Port of the Account Service
 type AccountService interface {
-	NewAccount(dto.NewAccountRequest) (*dto.AccountResponse, *errs.AppError)
-	MakeTransaction(dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError)
+	NewAccount(dto2.NewAccountRequest) (*dto2.AccountResponse, *errs.AppError)
+	MakeTransaction(dto2.TransactionRequest) (*dto2.TransactionResponse, *errs.AppError)
 }
 
 type DefaultAccountService struct {
-	repo domain.AccountRepository
+	repo domain2.AccountRepository
 }
 
-func NewAccountService(repo domain.AccountRepository) DefaultAccountService {
+func NewAccountService(repo domain2.AccountRepository) DefaultAccountService {
 	return DefaultAccountService{repo}
 }
 
-func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.AccountResponse, *errs.AppError) {
+func (s DefaultAccountService) NewAccount(req dto2.NewAccountRequest) (*dto2.AccountResponse, *errs.AppError) {
 	err := req.ValidateAccountJSON()
 	if err != nil {
 		return nil, err
 	}
-	a := domain.NewAccount(req.CustomerId, req.AccountType, req.Amount)
+	a := domain2.NewAccount(req.CustomerId, req.AccountType, req.Amount)
 
 	newAccount, err := s.repo.Save(a)
 	if err != nil {
@@ -36,7 +36,7 @@ func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.Accou
 	return &response, nil
 }
 
-func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError) {
+func (s DefaultAccountService) MakeTransaction(req dto2.TransactionRequest) (*dto2.TransactionResponse, *errs.AppError) {
 	// incoming request validation
 	err := req.ValidateTransactionJSON()
 	if err != nil {
@@ -57,7 +57,7 @@ func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto
 	}
 
 	// if all is well, build the transaction object & save the transaction
-	t := domain.NewTransaction(req)
+	t := domain2.NewTransaction(req)
 
 	transaction, appError := s.repo.SaveTransaction(t)
 	if appError != nil {

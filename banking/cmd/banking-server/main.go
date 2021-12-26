@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/handlers"
-	"github.com/ashtishad/banking-microservice-hexagonal/pkg/domain"
-	"github.com/ashtishad/banking-microservice-hexagonal/pkg/service"
+	handlers2 "github.com/ashtishad/banking-microservice-hexagonal/banking/internal/handlers"
+	domain2 "github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/domain"
+	service2 "github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -19,17 +19,17 @@ func main() {
 	l := log.New(os.Stdout, "banking-server ", log.LstdFlags)
 
 	// db connection pool config
-	db := service.GetDbClient(l)
+	db := service2.GetDbClient(l)
 	defer func() {
 		_ = db.Close()
 		l.Println("DB connection pool closed")
 	}()
-	customerDbConn := domain.NewCustomerRepoDb(db, l)
-	accountDbConn := domain.NewAccountRepoDb(db, l)
+	customerDbConn := domain2.NewCustomerRepoDb(db, l)
+	accountDbConn := domain2.NewAccountRepoDb(db, l)
 
 	// wire up the handlers
-	ch := handlers.CustomerHandlers{Service: service.NewCustomerService(customerDbConn), L: l}
-	ah := handlers.AccountHandlers{Service: service.NewAccountService(accountDbConn), L: l}
+	ch := handlers2.CustomerHandlers{Service: service2.NewCustomerService(customerDbConn), L: l}
+	ah := handlers2.AccountHandlers{Service: service2.NewAccountService(accountDbConn), L: l}
 
 	// create a router and register handlers
 	r := mux.NewRouter()

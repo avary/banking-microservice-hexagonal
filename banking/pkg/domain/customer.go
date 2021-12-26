@@ -1,8 +1,8 @@
 package domain
 
 import (
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/dto"
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
 )
 
 type Customer struct {

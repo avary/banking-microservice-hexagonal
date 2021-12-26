@@ -2,7 +2,7 @@ package domain
 
 import (
 	"database/sql"
-	"github.com/ashtishad/banking-microservice-hexagonal/internal/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
 	"log"
 )
 
