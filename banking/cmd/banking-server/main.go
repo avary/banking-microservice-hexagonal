@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/handlers"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/middlewares"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/domain"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/service"
 	"github.com/gorilla/mux"
@@ -40,6 +41,10 @@ func main() {
 	postRtr := r.Methods(http.MethodPost).Subrouter()
 	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount)
 	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.MakeTransaction)
+
+	// Middlewares
+	am := middlewares.Auth{Repo: domain.NewAuthRepository()}
+	r.Use(am.AuthorizationHandler())
 
 	// creating the server
 	srv := &http.Server{
