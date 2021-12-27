@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	dto2 "github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
@@ -17,7 +17,7 @@ type AccountHandlers struct {
 func (h AccountHandlers) NewAccount(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerId := vars["customer_id"]
-	var request dto2.NewAccountRequest
+	var request dto.NewAccountRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		renderJSON(w, http.StatusBadRequest, err.Error())
@@ -40,7 +40,7 @@ func (h AccountHandlers) MakeTransaction(w http.ResponseWriter, r *http.Request)
 	customerId := vars["customer_id"]
 
 	// decode incoming request
-	var request dto2.TransactionRequest
+	var request dto.TransactionRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		renderJSON(w, http.StatusBadRequest, err.Error())
 	} else {

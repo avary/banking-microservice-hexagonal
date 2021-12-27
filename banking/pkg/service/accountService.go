@@ -1,15 +1,15 @@
 package service
 
 import (
-	dto2 "github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
 	domain2 "github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/domain"
 )
 
 // AccountService is the Primary Port of the Account Service
 type AccountService interface {
-	NewAccount(dto2.NewAccountRequest) (*dto2.AccountResponse, *errs.AppError)
-	MakeTransaction(dto2.TransactionRequest) (*dto2.TransactionResponse, *errs.AppError)
+	NewAccount(dto.NewAccountRequest) (*dto.AccountResponse, *errs.AppError)
+	MakeTransaction(dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError)
 }
 
 type DefaultAccountService struct {
@@ -20,7 +20,7 @@ func NewAccountService(repo domain2.AccountRepository) DefaultAccountService {
 	return DefaultAccountService{repo}
 }
 
-func (s DefaultAccountService) NewAccount(req dto2.NewAccountRequest) (*dto2.AccountResponse, *errs.AppError) {
+func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.AccountResponse, *errs.AppError) {
 	err := req.ValidateAccountJSON()
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (s DefaultAccountService) NewAccount(req dto2.NewAccountRequest) (*dto2.Acc
 	return &response, nil
 }
 
-func (s DefaultAccountService) MakeTransaction(req dto2.TransactionRequest) (*dto2.TransactionResponse, *errs.AppError) {
+func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError) {
 	// incoming request validation
 	err := req.ValidateTransactionJSON()
 	if err != nil {
