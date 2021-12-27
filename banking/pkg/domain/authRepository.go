@@ -19,6 +19,7 @@ func NewAuthRepository() RemoteAuthRepository {
 	return RemoteAuthRepository{}
 }
 
+// IsAuthorized checks if the token is authorized to access the route
 func (r RemoteAuthRepository) IsAuthorized(token string, routeName string, vars map[string]string) bool {
 
 	u := buildVerifyURL(token, routeName, vars)
@@ -37,15 +38,15 @@ func (r RemoteAuthRepository) IsAuthorized(token string, routeName string, vars 
 }
 
 /*
-  This will generate a url for token verification in the below format
+  buildVerifyURL generates an url for token verification in the below format
   /auth/verify?token={token string}
               &routeName={current route name}
               &customer_id={customer id from the current route}
               &account_id={account id from current route if available}
-  Sample: /auth/verify?token=aaaa.bbbb.cccc&routeName=MakeTransaction&customer_id=2000&account_id=95470
+  Sample: /auth/verify?token=aaaa.bbbb.cccc&routeName=MakeTransaction&customer_id=1&account_id=1
 */
 func buildVerifyURL(token string, routeName string, vars map[string]string) string {
-	u := url.URL{Host: "localhost:8181", Path: "/auth/verify", Scheme: "http"}
+	u := url.URL{Host: "localhost:5001", Path: "/auth/verify", Scheme: "http"}
 	q := u.Query()
 	q.Add("token", token)
 	q.Add("routeName", routeName)
