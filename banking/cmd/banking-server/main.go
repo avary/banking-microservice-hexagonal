@@ -35,12 +35,12 @@ func main() {
 	// create a router and register handlers
 	r := mux.NewRouter()
 	getRtr := r.Methods(http.MethodGet).Subrouter()
-	getRtr.HandleFunc("/customers/", ch.GetAllCustomers)
-	getRtr.HandleFunc("/customers/{customer_id:[0-9]+}", ch.GetCustomerByID)
+	getRtr.HandleFunc("/customers/", ch.GetAllCustomers).Name("GetAllCustomers")
+	getRtr.HandleFunc("/customers/{customer_id:[0-9]+}", ch.GetCustomerByID).Name("GetCustomer")
 
 	postRtr := r.Methods(http.MethodPost).Subrouter()
-	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount)
-	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.MakeTransaction)
+	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount).Name("NewAccount")
+	postRtr.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.MakeTransaction).Name("NewTransaction")
 
 	// Middlewares
 	am := middlewares.Auth{Repo: domain.NewAuthRepository()}
