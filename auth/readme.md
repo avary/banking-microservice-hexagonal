@@ -17,16 +17,22 @@
 
 # routes
 
-    1. Get all customers: GET /customers
-    2. Get customer by id: GET /customers/:id
-    3. Create new account: POST /customers/:id/accounts
-    4. Make a transaction: POST customers/:id/account/:account_id
+    1. GetAllCustomers: GET /customers
+    2. GetCustomer: GET /customers/:id
+    3  NewAccount: POST /customers/:id/accounts
+    4. NewTransaction: POST customers/:id/account/:account_id
 
 
 # RBAC
 
-    1. Role: admin -> can do all.
-    2. Role: user -> Get customer by ID & Make a transaction.
+    1. Role: admin -> All.
+    2. Role: user -> GetCustomer & NewTransaction.
+
+# Verification Process
+
+    1. Validity of the token(include expiry time and signature).
+    2. Verify if the role has access to the resource.
+    3. vefify if the resource being accessd by same user.
 
 
 [//] # ( Path: cmd/auth-server/readme.md
