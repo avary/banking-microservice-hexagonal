@@ -1,11 +1,11 @@
-package handlers
+package lib
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
-func renderJSON(w http.ResponseWriter, code int, data interface{}) {
+func RenderJSON(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(code)
 	if err := json.NewEncoder(w).Encode(data); err != nil {

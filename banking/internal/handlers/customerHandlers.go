@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/lib"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
@@ -21,11 +22,11 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 	customers, err := ch.Service.GetAllCustomers(status)
 
 	if err != nil {
-		renderJSON(w, err.StatusCode, err.AsMessage())
+		lib.RenderJSON(w, err.StatusCode, err.AsMessage())
 		ch.L.Println(err.AsMessage())
 		return
 	} else {
-		renderJSON(w, http.StatusOK, customers)
+		lib.RenderJSON(w, http.StatusOK, customers)
 	}
 }
 
@@ -38,8 +39,8 @@ func (ch *CustomerHandlers) GetCustomerByID(w http.ResponseWriter, r *http.Reque
 
 	customer, err := ch.Service.GetById(id)
 	if err != nil {
-		renderJSON(w, err.StatusCode, err.AsMessage())
+		lib.RenderJSON(w, err.StatusCode, err.AsMessage())
 	} else {
-		renderJSON(w, http.StatusOK, customer)
+		lib.RenderJSON(w, http.StatusOK, customer)
 	}
 }

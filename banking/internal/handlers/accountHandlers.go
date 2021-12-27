@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/lib"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/service"
 	"github.com/gorilla/mux"
 	"log"
@@ -20,14 +21,14 @@ func (h AccountHandlers) NewAccount(w http.ResponseWriter, r *http.Request) {
 	var request dto.NewAccountRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		renderJSON(w, http.StatusBadRequest, err.Error())
+		lib.RenderJSON(w, http.StatusBadRequest, err.Error())
 	} else {
 		request.CustomerId = customerId
 		account, appError := h.Service.NewAccount(request)
 		if appError != nil {
-			renderJSON(w, appError.StatusCode, appError.AsMessage())
+			lib.RenderJSON(w, appError.StatusCode, appError.AsMessage())
 		} else {
-			renderJSON(w, http.StatusCreated, account)
+			lib.RenderJSON(w, http.StatusCreated, account)
 		}
 	}
 }
@@ -42,7 +43,7 @@ func (h AccountHandlers) MakeTransaction(w http.ResponseWriter, r *http.Request)
 	// decode incoming request
 	var request dto.TransactionRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		renderJSON(w, http.StatusBadRequest, err.Error())
+		lib.RenderJSON(w, http.StatusBadRequest, err.Error())
 	} else {
 
 		//build the request object
@@ -53,9 +54,9 @@ func (h AccountHandlers) MakeTransaction(w http.ResponseWriter, r *http.Request)
 		account, appError := h.Service.MakeTransaction(request)
 
 		if appError != nil {
-			renderJSON(w, appError.StatusCode, appError.AsMessage())
+			lib.RenderJSON(w, appError.StatusCode, appError.AsMessage())
 		} else {
-			renderJSON(w, http.StatusOK, account)
+			lib.RenderJSON(w, http.StatusOK, account)
 		}
 	}
 }
