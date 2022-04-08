@@ -1,9 +1,9 @@
 package middlewares
 
 import (
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/lib"
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/domain"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/domain"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/lib"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strings"

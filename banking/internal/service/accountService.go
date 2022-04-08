@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/domain"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
-	domain2 "github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/domain"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/errs"
 )
 
 // AccountService is the Primary Port of the Account Service
@@ -13,10 +13,10 @@ type AccountService interface {
 }
 
 type DefaultAccountService struct {
-	repo domain2.AccountRepository
+	repo domain.AccountRepository
 }
 
-func NewAccountService(repo domain2.AccountRepository) DefaultAccountService {
+func NewAccountService(repo domain.AccountRepository) DefaultAccountService {
 	return DefaultAccountService{repo}
 }
 
@@ -25,7 +25,7 @@ func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.Accou
 	if err != nil {
 		return nil, err
 	}
-	a := domain2.NewAccount(req.CustomerId, req.AccountType, req.Amount)
+	a := domain.NewAccount(req.CustomerId, req.AccountType, req.Amount)
 
 	newAccount, err := s.repo.Save(a)
 	if err != nil {
@@ -57,7 +57,7 @@ func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto
 	}
 
 	// if all is well, build the transaction object & save the transaction
-	t := domain2.NewTransaction(req)
+	t := domain.NewTransaction(req)
 
 	transaction, appError := s.repo.SaveTransaction(t)
 	if appError != nil {

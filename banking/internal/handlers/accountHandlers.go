@@ -3,8 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/dto"
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/lib"
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/service"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/service"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/lib"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

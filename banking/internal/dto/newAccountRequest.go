@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/errs"
 	"strings"
 )
 

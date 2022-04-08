@@ -3,7 +3,7 @@ package domain
 import (
 	"database/sql"
 	"fmt"
-	"github.com/ashtishad/banking-microservice-hexagonal/banking/internal/errs"
+	"github.com/ashtishad/banking-microservice-hexagonal/banking/pkg/errs"
 	"log"
 	"strconv"
 )
